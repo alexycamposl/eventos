@@ -1,4 +1,4 @@
-package org.mastereventos.models;
+package org.mastereventos.model;
 
 
 import java.util.ArrayList;

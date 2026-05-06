@@ -1,4 +1,5 @@
 package org.mastereventos.adapter;
 
-public class PagoExterno {
+public interface PagoExterno {
+    boolean pagar(double monto);
 }

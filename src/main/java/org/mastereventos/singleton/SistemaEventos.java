@@ -1,9 +1,7 @@
-package org.mastereventos;
+package org.mastereventos.singleton;
 
-
-
-import com.cristhianlopez.model.Evento;
-import com.cristhianlopez.model.Usuario;
+import org.mastereventos.model.Usuario;
+import org.mastereventos.model.Evento;
 
 import java.util.ArrayList;
 import java.util.List;

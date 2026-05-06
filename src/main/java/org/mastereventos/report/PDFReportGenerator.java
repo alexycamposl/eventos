@@ -1,4 +1,4 @@
-package org.mastereventos.reports;
+package org.mastereventos.report;
 
 public class PDFReportGenerator {
 }

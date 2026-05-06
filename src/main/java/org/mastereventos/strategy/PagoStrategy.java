@@ -1,4 +1,6 @@
 package org.mastereventos.strategy;
 
-public class PagoStrategy {
+public interface PagoStrategy {
+    boolean procesarPago(double monto);
+    String getMetodoPago();
 }

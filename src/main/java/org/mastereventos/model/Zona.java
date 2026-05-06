@@ -1,4 +1,4 @@
-package org.mastereventos.models;
+package org.mastereventos.model;
 
 
 
@@ -36,4 +36,10 @@ public class Zona {
     public String getNombre() {
         return nombre;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " - $" + precioBase;
+    }
+
 }

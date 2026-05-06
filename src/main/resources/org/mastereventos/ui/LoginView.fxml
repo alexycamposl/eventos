@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="15.0"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.mastereventos.controller.LoginController"
+      style="-fx-background-color: linear-gradient(to bottom, #1e3c72, #2a5298);"
+      prefHeight="600.0" prefWidth="900.0">
+
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="Bienvenido a MasterEventos"
+           style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="usernameField"
+               promptText="Usuario"
+               maxWidth="300"
+               style="-fx-font-size: 16px;"/>
+
+    <PasswordField fx:id="passwordField"
+                   promptText="Contraseña"
+                   maxWidth="300"
+                   style="-fx-font-size: 16px;"/>
+
+    <Button text="Iniciar Sesión"
+            onAction="#handleLogin"
+            maxWidth="300"
+            style="-fx-font-size: 16px; -fx-background-color: #00c6ff; -fx-text-fill: white;"/>
+
+</VBox>

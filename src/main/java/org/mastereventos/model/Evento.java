@@ -1,4 +1,4 @@
-package org.mastereventos.models;
+package org.mastereventos.model;
 
 public class Evento {
 
@@ -52,5 +52,10 @@ public class Evento {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " | " + categoria + " | " + ciudad + " | " + fecha;
     }
 }

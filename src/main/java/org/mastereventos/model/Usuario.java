@@ -1,5 +1,4 @@
-package org.mastereventos.models;
-
+package org.mastereventos.model;
 
 public class Usuario {
 
@@ -7,12 +6,16 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String telefono;
+    private String password;
+    private Rol rol;
 
-    public Usuario(String idUsuario, String nombre, String correo, String telefono) {
+    public Usuario(String idUsuario, String nombre, String correo, String telefono, String password, Rol rol) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
+        this.password = password;
+        this.rol = rol;
     }
 
     public String getIdUsuario() {
@@ -45,5 +48,21 @@ public class Usuario {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }

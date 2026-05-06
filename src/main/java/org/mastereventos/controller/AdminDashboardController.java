@@ -1,4 +1,4 @@
-package org.mastereventos.controllers;
+package org.mastereventos.controller;
 
 public class AdminDashboardController {
 }

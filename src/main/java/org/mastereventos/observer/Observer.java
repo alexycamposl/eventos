@@ -1,4 +1,5 @@
 package org.mastereventos.observer;
 
-public class Observer {
+public interface Observer {
+    void actualizar(String mensaje);
 }

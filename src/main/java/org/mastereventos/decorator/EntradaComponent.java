@@ -1,4 +1,6 @@
 package org.mastereventos.decorator;
 
-public class EntradaComponent {
+public interface EntradaComponent {
+    double getCosto();
+    String getDescripcion();
 }
