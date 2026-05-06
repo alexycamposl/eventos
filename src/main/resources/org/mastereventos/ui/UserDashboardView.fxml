@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.mastereventos.controller.UserDashboardController"
+            style="-fx-background-color: #f4f6f8;">
+
+    <content>
+        <VBox alignment="CENTER" spacing="15.0"
+              prefWidth="900.0"
+              style="-fx-background-color: #f4f6f8;">
+
+            <padding>
+                <Insets top="30" right="40" bottom="30" left="40"/>
+            </padding>
+
+            <Label text="Panel de Usuario"
+                   style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+            <Label text="Eventos disponibles"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <ComboBox fx:id="ciudadComboBox"
+                          promptText="Ciudad"
+                          prefWidth="180"/>
+
+                <ComboBox fx:id="categoriaComboBox"
+                          promptText="Categoría"
+                          prefWidth="180"/>
+
+                <Button text="Filtrar"
+                        onAction="#handleFiltrar"/>
+
+                <Button text="Limpiar"
+                        onAction="#handleLimpiarFiltros"/>
+            </HBox>
+
+            <ListView fx:id="eventosListView"
+                      prefWidth="650"
+                      prefHeight="180"/>
+
+            <Label text="Detalle del evento"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <TextArea fx:id="detalleEventoArea"
+                      prefWidth="650"
+                      prefHeight="130"
+                      editable="false"
+                      wrapText="true"/>
+
+            <Label text="Selección de entrada"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <ComboBox fx:id="zonaComboBox"
+                          promptText="Zona"
+                          prefWidth="220"/>
+
+                <ComboBox fx:id="asientoComboBox"
+                          promptText="Asiento"
+                          prefWidth="220"/>
+
+                <Label fx:id="precioZonaLabel"
+                       text="Precio: $0"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Label text="Servicios adicionales"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <CheckBox fx:id="vipCheckBox"
+                          text="VIP"/>
+
+                <CheckBox fx:id="seguroCheckBox"
+                          text="Seguro"/>
+
+                <CheckBox fx:id="merchCheckBox"
+                          text="Merchandising"/>
+            </HBox>
+
+            <Button text="Crear compra"
+                    onAction="#handleCrearCompra"/>
+
+            <Label text="Resumen de compra"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <TextArea fx:id="resumenCompraArea"
+                      prefWidth="650"
+                      prefHeight="180"
+                      editable="false"
+                      wrapText="true"/>
+
+        </VBox>
+    </content>
+</ScrollPane>
