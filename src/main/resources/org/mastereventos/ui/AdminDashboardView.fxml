@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="15.0"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.mastereventos.controller.AdminDashboardController"
+      prefHeight="600.0" prefWidth="900.0"
+      style="-fx-background-color: #eef2ff;">
+
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="Panel de Administrador"
+           style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+    <Label text="Aquí el administrador podrá gestionar eventos, usuarios, recintos, compras y reportes."
+           style="-fx-font-size: 16px;"/>
+
+</VBox>
