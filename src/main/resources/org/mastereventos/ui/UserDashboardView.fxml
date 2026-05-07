@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+
+
 <ScrollPane fitToWidth="true"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.mastereventos.controller.UserDashboardController"
@@ -59,6 +61,25 @@
                       prefHeight="130"
                       editable="false"
                       wrapText="true"/>
+            <Label text="Historial de compras"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <ListView fx:id="comprasListView"
+                      prefWidth="650"
+                      prefHeight="220"/>
+
+            <HBox alignment="CENTER" spacing="10">
+
+                <Button text="Actualizar historial"
+                        onAction="#handleActualizarHistorial"/>
+
+                <Button text="Cancelar compra"
+                        onAction="#handleCancelarCompra"/>
+
+                <Button text="Reembolsar compra"
+                        onAction="#handleReembolsarCompra"/>
+
+            </HBox>
 
             <Label text="Selección de entrada"
                    style="-fx-font-size: 18px; -fx-font-weight: bold;"/>

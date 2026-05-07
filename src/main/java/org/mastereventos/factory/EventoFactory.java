@@ -1,5 +1,6 @@
 package org.mastereventos.factory;
 
+import org.mastereventos.model.EstadoEvento;
 import org.mastereventos.model.Evento;
 
 public abstract class EventoFactory {
@@ -11,6 +12,6 @@ public abstract class EventoFactory {
             String descripcion,
             String ciudad,
             String fecha,
-            String estado
+            EstadoEvento estado
     );
 }

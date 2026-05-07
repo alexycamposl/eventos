@@ -11,7 +11,7 @@ import org.mastereventos.repository.EventoRepository;
 import org.mastereventos.repository.ZonaRepository;
 import org.mastereventos.repository.CompraRepository;
 import org.mastereventos.repository.IncidenciaRepository;
-
+import javafx.scene.control.ListCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -55,6 +55,11 @@ public class UserDashboardController {
     @FXML
     private TextArea resumenCompraArea;
 
+    @FXML
+    private ListView<Compra> comprasListView;
+
+
+
     private Usuario usuarioActual;
 
     private final EventoRepository eventoRepository = new EventoRepository();
@@ -70,6 +75,7 @@ public class UserDashboardController {
     private void initialize() {
         cargarFiltros();
         cargarEventos();
+        configurarListaCompras();
 
         eventosListView.getSelectionModel()
                 .selectedItemProperty()
@@ -90,6 +96,33 @@ public class UserDashboardController {
 
         merchCheckBox.selectedProperty()
                 .addListener((observable, anterior, seleccionado) -> actualizarTotalEstimado());
+    }
+
+    private void configurarListaCompras() {
+
+        comprasListView.setCellFactory(param -> new ListCell<>() {
+
+            @Override
+            protected void updateItem(Compra compra, boolean empty) {
+
+                super.updateItem(compra, empty);
+
+                if (empty || compra == null) {
+                    setText(null);
+                } else {
+
+                    setText(
+                            compra.getIdCompra()
+                                    + " | "
+                                    + compra.getEvento().getNombre()
+                                    + " | $"
+                                    + compra.getTotal()
+                                    + " | "
+                                    + compra.getEstado()
+                    );
+                }
+            }
+        });
     }
 
     private void cargarFiltros() {
@@ -119,6 +152,62 @@ public class UserDashboardController {
         String categoria = categoriaComboBox.getValue();
 
         eventosListView.getItems().addAll(eventoRepository.filtrarEventos(ciudad, categoria));
+    }
+    @FXML
+    private void handleActualizarHistorial() {
+        actualizarHistorialCompras();
+    }
+
+    @FXML
+    private void handleCancelarCompra() {
+
+        Compra compra =
+                comprasListView.getSelectionModel().getSelectedItem();
+
+        if (compra == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona una compra."
+            );
+
+            return;
+        }
+
+        compra.cancelarCompra();
+
+        actualizarHistorialCompras();
+
+        showAlert(
+                "Compra cancelada",
+                "La compra fue cancelada correctamente."
+        );
+    }
+
+    @FXML
+    private void handleReembolsarCompra() {
+
+        Compra compra =
+                comprasListView.getSelectionModel().getSelectedItem();
+
+        if (compra == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona una compra."
+            );
+
+            return;
+        }
+
+        compra.reembolsarCompra();
+
+        actualizarHistorialCompras();
+
+        showAlert(
+                "Compra reembolsada",
+                "El reembolso fue procesado."
+        );
     }
 
     @FXML
@@ -185,6 +274,7 @@ public class UserDashboardController {
                 .agregarEntrada(entrada)
                 .build();
         compraRepository.guardarCompra(compra);
+        actualizarHistorialCompras();
 
         asiento.setEstado(EstadoAsiento.RESERVADO);
         cargarAsientosZona(zona);
@@ -252,6 +342,21 @@ public class UserDashboardController {
                 + "Estado: " + evento.getEstado();
 
         detalleEventoArea.setText(detalle);
+    }
+
+    private void actualizarHistorialCompras() {
+
+        comprasListView.getItems().clear();
+
+        if (usuarioActual == null) {
+            return;
+        }
+
+        comprasListView.getItems().addAll(
+                compraRepository.listarComprasUsuario(
+                        usuarioActual.getIdUsuario()
+                )
+        );
     }
 
     private void cargarZonasEvento(Evento evento) {

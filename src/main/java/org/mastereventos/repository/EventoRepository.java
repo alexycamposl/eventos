@@ -3,6 +3,7 @@ package org.mastereventos.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mastereventos.model.EstadoEvento;
 import org.mastereventos.model.Evento;
 
 public class EventoRepository {
@@ -10,6 +11,7 @@ public class EventoRepository {
     private final List<Evento> eventos;
 
     public EventoRepository() {
+
         eventos = new ArrayList<>();
 
         eventos.add(new Evento(
@@ -19,7 +21,7 @@ public class EventoRepository {
                 "Evento musical con bandas nacionales.",
                 "Bogotá",
                 "2026-06-15 20:00",
-                "Publicado"
+                EstadoEvento.PUBLICADO
         ));
 
         eventos.add(new Evento(
@@ -29,25 +31,44 @@ public class EventoRepository {
                 "Presentación teatral para público general.",
                 "Medellín",
                 "2026-07-10 19:00",
-                "Publicado"
+                EstadoEvento.PUBLICADO
         ));
 
         eventos.add(new Evento(
                 "E003",
                 "Conferencia de Tecnología",
                 "Conferencia",
-                "Charlas sobre innovación, software e inteligencia artificial.",
+                "Charlas sobre innovación e IA.",
                 "Cali",
                 "2026-08-05 09:00",
-                "Publicado"
+                EstadoEvento.PUBLICADO
         ));
     }
 
+    // =========================
+    // LISTAR TODOS
+    // =========================
+
+    public List<Evento> listarEventos() {
+        return eventos;
+    }
+
+    // =========================
+    // LISTAR PUBLICADOS
+    // =========================
+
     public List<Evento> listarEventosPublicados() {
-        List<Evento> publicados = new ArrayList<>();
+
+        List<Evento> publicados =
+                new ArrayList<>();
 
         for (Evento evento : eventos) {
-            if ("Publicado".equalsIgnoreCase(evento.getEstado())) {
+
+            if (
+                    evento.getEstado()
+                            == EstadoEvento.PUBLICADO
+            ) {
+
                 publicados.add(evento);
             }
         }
@@ -55,29 +76,51 @@ public class EventoRepository {
         return publicados;
     }
 
-    public List<Evento> filtrarEventos(String ciudad, String categoria) {
-        List<Evento> filtrados = new ArrayList<>();
+    // =========================
+    // FILTRAR
+    // =========================
+
+    public List<Evento> filtrarEventos(
+            String ciudad,
+            String categoria) {
+
+        List<Evento> filtrados =
+                new ArrayList<>();
 
         for (Evento evento : listarEventosPublicados()) {
-            boolean coincideCiudad = ciudad == null
-                    || ciudad.isBlank()
-                    || "Todas".equalsIgnoreCase(ciudad)
-                    || evento.getCiudad().equalsIgnoreCase(ciudad);
 
-            boolean coincideCategoria = categoria == null
-                    || categoria.isBlank()
-                    || "Todas".equalsIgnoreCase(categoria)
-                    || evento.getCategoria().equalsIgnoreCase(categoria);
+            boolean coincideCiudad =
 
-            if (coincideCiudad && coincideCategoria) {
+                    ciudad == null
+                            ||
+                            ciudad.isBlank()
+                            ||
+                            ciudad.equalsIgnoreCase("Todas")
+                            ||
+                            evento.getCiudad()
+                                    .equalsIgnoreCase(ciudad);
+
+            boolean coincideCategoria =
+
+                    categoria == null
+                            ||
+                            categoria.isBlank()
+                            ||
+                            categoria.equalsIgnoreCase("Todas")
+                            ||
+                            evento.getCategoria()
+                                    .equalsIgnoreCase(categoria);
+
+            if (
+                    coincideCiudad
+                            &&
+                            coincideCategoria
+            ) {
+
                 filtrados.add(evento);
             }
         }
 
         return filtrados;
-    }
-
-    public List<Evento> getEventos() {
-        return eventos;
     }
 }

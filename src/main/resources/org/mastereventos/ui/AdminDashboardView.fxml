@@ -1,23 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="15.0"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.mastereventos.controller.AdminDashboardController"
-      prefHeight="600.0" prefWidth="900.0"
-      style="-fx-background-color: #eef2ff;">
+<ScrollPane fitToWidth="true"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.mastereventos.controller.AdminDashboardController"
+            style="-fx-background-color: #eef2ff;">
 
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
+    <content>
 
-    <Label text="Panel de Administrador"
-           style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+        <VBox alignment="CENTER"
+              spacing="15"
+              prefWidth="900"
+              style="-fx-background-color: #eef2ff;">
 
-    <Label text="Aquí el administrador podrá gestionar eventos, usuarios, recintos, compras y reportes."
-           style="-fx-font-size: 16px;"/>
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
 
-</VBox>
+            <Label text="Panel Administrador"
+                   style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+            <!-- EVENTOS -->
+
+            <Label text="Gestión de Eventos"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <ListView fx:id="eventosListView"
+                      prefWidth="700"
+                      prefHeight="220"/>
+
+            <HBox spacing="10"
+                  alignment="CENTER">
+
+                <Button text="Publicar Evento"
+                        onAction="#handlePublicarEvento"/>
+
+                <Button text="Pausar Evento"
+                        onAction="#handlePausarEvento"/>
+
+                <Button text="Cancelar Evento"
+                        onAction="#handleCancelarEvento"/>
+
+            </HBox>
+
+            <!-- COMPRAS -->
+
+            <Label text="Compras Registradas"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <ListView fx:id="comprasListView"
+                      prefWidth="700"
+                      prefHeight="220"/>
+
+            <!-- INCIDENCIAS -->
+
+            <Label text="Incidencias"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <ListView fx:id="incidenciasListView"
+                      prefWidth="700"
+                      prefHeight="180"/>
+
+            <!-- MÉTRICAS -->
+
+            <Label text="Métricas de Ventas"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <PieChart fx:id="ventasChart"
+                      prefWidth="600"
+                      prefHeight="350"/>
+
+        </VBox>
+
+    </content>
+</ScrollPane>
