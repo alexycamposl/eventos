@@ -6,14 +6,11 @@ import org.mastereventos.decorator.EntradaComponent;
 import org.mastereventos.decorator.MerchDecorator;
 import org.mastereventos.decorator.SeguroDecorator;
 import org.mastereventos.decorator.VIPDecorator;
-import org.mastereventos.model.Asiento;
-import org.mastereventos.model.Compra;
-import org.mastereventos.model.Entrada;
-import org.mastereventos.model.Evento;
-import org.mastereventos.model.Usuario;
-import org.mastereventos.model.Zona;
+import org.mastereventos.model.*;
 import org.mastereventos.repository.EventoRepository;
 import org.mastereventos.repository.ZonaRepository;
+import org.mastereventos.repository.CompraRepository;
+import org.mastereventos.repository.IncidenciaRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -62,6 +59,8 @@ public class UserDashboardController {
 
     private final EventoRepository eventoRepository = new EventoRepository();
     private final ZonaRepository zonaRepository = new ZonaRepository();
+    private final CompraRepository compraRepository = new CompraRepository();
+    private final IncidenciaRepository incidenciaRepository = new IncidenciaRepository();
 
     public void setUsuarioActual(Usuario usuarioActual) {
         this.usuarioActual = usuarioActual;
@@ -151,14 +150,32 @@ public class UserDashboardController {
             return;
         }
 
+        if (!asiento.estaDisponible()) {
+
+            Incidencia incidencia = new Incidencia(
+                    "INC-" + System.currentTimeMillis(),
+                    "Asiento ocupado",
+                    "Intento de compra de asiento no disponible",
+                    asiento.getIdAsiento()
+            );
+
+            incidenciaRepository.registrarIncidencia(incidencia);
+
+            showAlert(
+                    "Asiento no disponible",
+                    "El asiento seleccionado ya no está disponible."
+            );
+
+            return;
+        }
+
         EntradaComponent entradaDecorada = crearEntradaDecorada(evento, zona);
 
         Entrada entrada = new Entrada(
                 "ENT-" + System.currentTimeMillis(),
                 zona,
                 asiento,
-                entradaDecorada.getCosto(),
-                "Activa"
+                entradaDecorada.getCosto()
         );
 
         Compra compra = new CompraBuilder()
@@ -167,8 +184,9 @@ public class UserDashboardController {
                 .setEvento(evento)
                 .agregarEntrada(entrada)
                 .build();
+        compraRepository.guardarCompra(compra);
 
-        asiento.setEstado("Reservado");
+        asiento.setEstado(EstadoAsiento.RESERVADO);
         cargarAsientosZona(zona);
 
         String resumen = "Compra creada correctamente\n"

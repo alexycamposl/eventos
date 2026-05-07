@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mastereventos.model.Asiento;
+import org.mastereventos.model.EstadoAsiento;
 import org.mastereventos.model.Zona;
 
 public class ZonaRepository {
@@ -18,40 +19,62 @@ public class ZonaRepository {
     }
 
     private void inicializarDatos() {
+
+        // EVENTO 1
         List<Zona> zonasE001 = new ArrayList<>();
 
         Zona vip = new Zona("Z001", "VIP", 50, 250000);
-        vip.agregarAsiento(new Asiento("A001", "A", 1, "Disponible"));
-        vip.agregarAsiento(new Asiento("A002", "A", 2, "Disponible"));
-        vip.agregarAsiento(new Asiento("A003", "A", 3, "Bloqueado"));
+
+        Asiento a1 = new Asiento("A001", "A", 1);
+        Asiento a2 = new Asiento("A002", "A", 2);
+        Asiento a3 = new Asiento("A003", "A", 3);
+
+        a3.setEstado(EstadoAsiento.BLOQUEADO);
+
+        vip.agregarAsiento(a1);
+        vip.agregarAsiento(a2);
+        vip.agregarAsiento(a3);
 
         Zona general = new Zona("Z002", "General", 200, 90000);
-        general.agregarAsiento(new Asiento("A004", "B", 1, "Disponible"));
-        general.agregarAsiento(new Asiento("A005", "B", 2, "Disponible"));
+
+        general.agregarAsiento(new Asiento("A004", "B", 1));
+        general.agregarAsiento(new Asiento("A005", "B", 2));
 
         zonasE001.add(vip);
         zonasE001.add(general);
 
+        // EVENTO 2
         List<Zona> zonasE002 = new ArrayList<>();
 
         Zona preferencial = new Zona("Z003", "Preferencial", 80, 120000);
-        preferencial.agregarAsiento(new Asiento("A006", "C", 1, "Disponible"));
-        preferencial.agregarAsiento(new Asiento("A007", "C", 2, "Disponible"));
+
+        preferencial.agregarAsiento(new Asiento("A006", "C", 1));
+        preferencial.agregarAsiento(new Asiento("A007", "C", 2));
 
         Zona platea = new Zona("Z004", "Platea", 150, 70000);
-        platea.agregarAsiento(new Asiento("A008", "D", 1, "Disponible"));
-        platea.agregarAsiento(new Asiento("A009", "D", 2, "Reservado"));
+
+        Asiento a8 = new Asiento("A008", "D", 1);
+        Asiento a9 = new Asiento("A009", "D", 2);
+
+        a9.setEstado(EstadoAsiento.RESERVADO);
+
+        platea.agregarAsiento(a8);
+        platea.agregarAsiento(a9);
 
         zonasE002.add(preferencial);
         zonasE002.add(platea);
 
+        // EVENTO 3
         List<Zona> zonasE003 = new ArrayList<>();
 
         Zona auditorio = new Zona("Z005", "Auditorio", 100, 60000);
-        auditorio.agregarAsiento(new Asiento("A010", "E", 1, "Disponible"));
-        auditorio.agregarAsiento(new Asiento("A011", "E", 2, "Disponible"));
+
+        auditorio.agregarAsiento(new Asiento("A010", "E", 1));
+        auditorio.agregarAsiento(new Asiento("A011", "E", 2));
 
         zonasE003.add(auditorio);
+
+        // MAPA FINAL
 
         zonasPorEvento.put("E001", zonasE001);
         zonasPorEvento.put("E002", zonasE002);
@@ -63,6 +86,7 @@ public class ZonaRepository {
     }
 
     public List<Asiento> listarAsientosDisponibles(Zona zona) {
+
         List<Asiento> disponibles = new ArrayList<>();
 
         if (zona == null) {
@@ -70,7 +94,8 @@ public class ZonaRepository {
         }
 
         for (Asiento asiento : zona.getAsientos()) {
-            if ("Disponible".equalsIgnoreCase(asiento.getEstado())) {
+
+            if (asiento.getEstado() == EstadoAsiento.DISPONIBLE) {
                 disponibles.add(asiento);
             }
         }
