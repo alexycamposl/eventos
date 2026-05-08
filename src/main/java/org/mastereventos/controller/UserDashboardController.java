@@ -20,6 +20,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import org.mastereventos.strategy.*;//actualizacion admin
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class UserDashboardController {
 
@@ -452,5 +455,41 @@ public class UserDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void handleCerrarSesion() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/org/mastereventos/ui/LoginView.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load(), 600, 400);
+
+            Stage stage =
+                    (Stage) eventosListView
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle("MasterEventos - Login");
+
+            stage.show();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    "Error",
+                    "No se pudo cerrar sesión."
+            );
+        }
     }
 }

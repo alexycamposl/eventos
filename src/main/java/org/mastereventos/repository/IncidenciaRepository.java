@@ -8,15 +8,14 @@ import java.util.List;
 
 public class IncidenciaRepository {
 
-    private final List<Incidencia> incidencias;
-
-    public IncidenciaRepository() {
-        incidencias = new ArrayList<>();
-    }
+    private static final List<Incidencia> incidencias =
+            new ArrayList<>();
 
     // REGISTRAR
 
-    public void registrarIncidencia(Incidencia incidencia) {
+    public void registrarIncidencia(
+            Incidencia incidencia) {
+
         incidencias.add(incidencia);
     }
 
@@ -28,14 +27,18 @@ public class IncidenciaRepository {
 
     // FILTRAR POR TIPO
 
-    public List<Incidencia> buscarPorTipo(String tipo) {
+    public List<Incidencia> buscarPorTipo(
+            String tipo) {
 
-        List<Incidencia> resultado = new ArrayList<>();
+        List<Incidencia> resultado =
+                new ArrayList<>();
 
         for (Incidencia incidencia : incidencias) {
 
-            if (incidencia.getTipo()
-                    .equalsIgnoreCase(tipo)) {
+            if (
+                    incidencia.getTipo()
+                            .equalsIgnoreCase(tipo)
+            ) {
 
                 resultado.add(incidencia);
             }
@@ -50,7 +53,8 @@ public class IncidenciaRepository {
             LocalDateTime inicio,
             LocalDateTime fin) {
 
-        List<Incidencia> resultado = new ArrayList<>();
+        List<Incidencia> resultado =
+                new ArrayList<>();
 
         for (Incidencia incidencia : incidencias) {
 

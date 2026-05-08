@@ -7,11 +7,8 @@ import java.util.List;
 
 public class CompraRepository {
 
-    private final List<Compra> compras;
-
-    public CompraRepository() {
-        compras = new ArrayList<>();
-    }
+    private static final List<Compra> compras =
+            new ArrayList<>();
 
     // GUARDAR
 
@@ -29,7 +26,8 @@ public class CompraRepository {
 
     public List<Compra> listarComprasUsuario(String idUsuario) {
 
-        List<Compra> resultado = new ArrayList<>();
+        List<Compra> resultado =
+                new ArrayList<>();
 
         for (Compra compra : compras) {
 

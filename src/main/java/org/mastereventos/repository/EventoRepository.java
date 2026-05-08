@@ -8,11 +8,14 @@ import org.mastereventos.model.Evento;
 
 public class EventoRepository {
 
-    private final List<Evento> eventos;
+    private static final List<Evento> eventos =
+            new ArrayList<>();
 
     public EventoRepository() {
 
-        eventos = new ArrayList<>();
+        if (!eventos.isEmpty()) {
+            return;
+        }
 
         eventos.add(new Evento(
                 "E001",

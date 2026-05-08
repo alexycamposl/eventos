@@ -30,6 +30,9 @@
             <Label text="Panel de Usuario"
                    style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
+            <Button text="Cerrar sesión"
+                    onAction="#handleCerrarSesion"/>
+
             <Label text="Eventos disponibles"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
@@ -130,6 +133,13 @@
                       prefHeight="180"
                       editable="false"
                       wrapText="true"/>
+
+            <Button text="Cerrar Sesión"
+                    onAction="#handleCerrarSesion"
+                    style="-fx-background-color: #ef4444;
+               -fx-text-fill: white;
+               -fx-font-weight: bold;"/>
+
 
         </VBox>
     </content>

@@ -6,6 +6,8 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 import org.mastereventos.model.Compra;
 import org.mastereventos.model.EstadoEvento;
@@ -14,6 +16,11 @@ import org.mastereventos.model.Incidencia;
 import org.mastereventos.repository.CompraRepository;
 import org.mastereventos.repository.EventoRepository;
 import org.mastereventos.repository.IncidenciaRepository;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+// actualizacion admin alex
 
 public class AdminDashboardController {
 
@@ -28,6 +35,21 @@ public class AdminDashboardController {
 
     @FXML
     private PieChart ventasChart;
+
+    @FXML
+    private TextField nombreEventoField;
+
+    @FXML
+    private TextField categoriaEventoField;
+
+    @FXML
+    private TextField ciudadEventoField;
+
+    @FXML
+    private TextField fechaEventoField;
+
+    @FXML
+    private TextArea descripcionEventoArea;
 
     private final EventoRepository eventoRepository =
             new EventoRepository();
@@ -80,6 +102,34 @@ public class AdminDashboardController {
                                     + " | "
                                     + evento.getEstado()
                     );
+                    setOnMouseClicked(event -> {
+
+                        Evento seleccionado =
+                                getItem();
+
+                        if (seleccionado != null) {
+
+                            nombreEventoField.setText(
+                                    seleccionado.getNombre()
+                            );
+
+                            categoriaEventoField.setText(
+                                    seleccionado.getCategoria()
+                            );
+
+                            ciudadEventoField.setText(
+                                    seleccionado.getCiudad()
+                            );
+
+                            fechaEventoField.setText(
+                                    seleccionado.getFecha()
+                            );
+
+                            descripcionEventoArea.setText(
+                                    seleccionado.getDescripcion()
+                            );
+                        }
+                    });
                 }
             }
         });
@@ -293,6 +343,160 @@ public class AdminDashboardController {
     // ALERTAS
     // =========================
 
+    @FXML
+    private void handleCrearEvento() {
+
+        String nombre =
+                nombreEventoField.getText();
+
+        String categoria =
+                categoriaEventoField.getText();
+
+        String ciudad =
+                ciudadEventoField.getText();
+
+        String fecha =
+                fechaEventoField.getText();
+
+        String descripcion =
+                descripcionEventoArea.getText();
+
+        if (
+                nombre.isBlank()
+                        ||
+                        categoria.isBlank()
+                        ||
+                        ciudad.isBlank()
+                        ||
+                        fecha.isBlank()
+                        ||
+                        descripcion.isBlank()
+        ) {
+
+            showAlert(
+                    "Error",
+                    "Completa todos los campos."
+            );
+
+            return;
+        }
+
+        Evento nuevoEvento =
+                new Evento(
+                        "E" + (eventoRepository.listarEventos().size() + 1),
+                        nombre,
+                        categoria,
+                        descripcion,
+                        ciudad,
+                        fecha,
+                        EstadoEvento.PUBLICADO
+                );
+
+        eventoRepository
+                .listarEventos()
+                .add(nuevoEvento);
+
+        cargarEventos();
+
+        limpiarFormularioEvento();
+
+        showAlert(
+                "Evento creado",
+                "El evento fue creado correctamente."
+        );
+    }
+
+    private void limpiarFormularioEvento() {
+
+        nombreEventoField.clear();
+
+        categoriaEventoField.clear();
+
+        ciudadEventoField.clear();
+
+        fechaEventoField.clear();
+
+        descripcionEventoArea.clear();
+    }
+
+    @FXML
+    private void handleEditarEvento() {
+
+        Evento evento =
+                eventosListView
+                        .getSelectionModel()
+                        .getSelectedItem();
+
+        if (evento == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona un evento."
+            );
+
+            return;
+        }
+
+        evento.setNombre(
+                nombreEventoField.getText()
+        );
+
+        evento.setCategoria(
+                categoriaEventoField.getText()
+        );
+
+        evento.setCiudad(
+                ciudadEventoField.getText()
+        );
+
+        evento.setFecha(
+                fechaEventoField.getText()
+        );
+
+        evento.setDescripcion(
+                descripcionEventoArea.getText()
+        );
+
+        eventosListView.refresh();
+
+        showAlert(
+                "Evento actualizado",
+                "Los cambios fueron guardados."
+        );
+    }
+
+    @FXML
+    private void handleEliminarEvento() {
+
+        Evento evento =
+                eventosListView
+                        .getSelectionModel()
+                        .getSelectedItem();
+
+        if (evento == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona un evento."
+            );
+
+            return;
+        }
+
+        eventoRepository
+                .listarEventos()
+                .remove(evento);
+
+        cargarEventos();
+
+        limpiarFormularioEvento();
+
+        showAlert(
+                "Evento eliminado",
+                "El evento fue eliminado correctamente."
+        );
+    }
+
     private void showAlert(
             String title,
             String message) {
@@ -307,5 +511,41 @@ public class AdminDashboardController {
         alert.setContentText(message);
 
         alert.showAndWait();
+    }
+    @FXML
+    private void handleCerrarSesion() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/org/mastereventos/ui/LoginView.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load(), 600, 400);
+
+            Stage stage =
+                    (Stage) eventosListView
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle("MasterEventos - Login");
+
+            stage.show();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    "Error",
+                    "No se pudo cerrar sesión."
+            );
+        }
     }
 }
