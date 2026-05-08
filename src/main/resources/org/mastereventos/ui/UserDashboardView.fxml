@@ -112,6 +112,13 @@
                           text="Merchandising"/>
             </HBox>
 
+            <Label text="Método de pago"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <ComboBox fx:id="metodoPagoComboBox"
+                      promptText="Selecciona método de pago"
+                      prefWidth="250"/>
+
             <Button text="Crear compra"
                     onAction="#handleCrearCompra"/>
 

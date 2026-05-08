@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import org.mastereventos.strategy.*;
 
 public class UserDashboardController {
 
@@ -53,10 +54,14 @@ public class UserDashboardController {
     private CheckBox merchCheckBox;
 
     @FXML
+    private ComboBox<String> metodoPagoComboBox;
+
+    @FXML
     private TextArea resumenCompraArea;
 
     @FXML
     private ListView<Compra> comprasListView;
+
 
 
 
@@ -76,6 +81,12 @@ public class UserDashboardController {
         cargarFiltros();
         cargarEventos();
         configurarListaCompras();
+
+        metodoPagoComboBox.getItems().addAll(
+                "Tarjeta",
+                "PayPal",
+                "PSE"
+        );
 
         eventosListView.getSelectionModel()
                 .selectedItemProperty()
@@ -267,12 +278,56 @@ public class UserDashboardController {
                 entradaDecorada.getCosto()
         );
 
+        String metodoPago =
+                metodoPagoComboBox.getValue();
+
+        if (metodoPago == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona método de pago."
+            );
+
+            return;
+        }
+
+        PagoStrategy estrategia;
+
+        switch (metodoPago) {
+
+            case "PayPal":
+                estrategia = new PagoPayPal();
+                break;
+
+            case "PSE":
+                estrategia = new PagoPSE();
+                break;
+
+            default:
+                estrategia = new PagoTarjeta();
+        }
+
         Compra compra = new CompraBuilder()
                 .setIdCompra("COM-" + System.currentTimeMillis())
                 .setUsuario(usuarioActual)
                 .setEvento(evento)
                 .agregarEntrada(entrada)
                 .build();
+
+        PagoContext context = new PagoContext();
+
+        context.setEstrategia(estrategia);
+
+        boolean pagoExitoso =
+                context.ejecutarPago(
+                        compra.getTotal()
+                );
+
+        if (pagoExitoso) {
+
+            compra.pagarCompra();
+        }
+
         compraRepository.guardarCompra(compra);
         actualizarHistorialCompras();
 
