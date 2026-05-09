@@ -9,7 +9,6 @@ public class ConciertoFactory extends EventoFactory {
     public Evento crearEvento(
             String id,
             String nombre,
-            String categoria,
             String descripcion,
             String ciudad,
             String fecha,

@@ -8,8 +8,28 @@ import java.util.List;
 
 public class IncidenciaRepository {
 
+    private static IncidenciaRepository instancia;
+
     private static final List<Incidencia> incidencias =
             new ArrayList<>();
+
+    // CONSTRUCTOR PRIVADO
+
+    private IncidenciaRepository() {
+    }
+
+    // SINGLETON
+
+    public static IncidenciaRepository getInstancia() {
+
+        if (instancia == null) {
+
+            instancia =
+                    new IncidenciaRepository();
+        }
+
+        return instancia;
+    }
 
     // REGISTRAR
 
@@ -46,9 +66,7 @@ public class IncidenciaRepository {
 
         return resultado;
     }
-
     // FILTRAR POR FECHA
-
     public List<Incidencia> buscarPorFecha(
             LocalDateTime inicio,
             LocalDateTime fin) {

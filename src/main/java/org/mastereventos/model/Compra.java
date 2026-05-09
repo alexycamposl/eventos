@@ -2,6 +2,13 @@ package org.mastereventos.model;
 
 import java.util.List;
 
+import org.mastereventos.state.CompraCancelada;
+import org.mastereventos.state.CompraConfirmada;
+import org.mastereventos.state.CompraContext;
+import org.mastereventos.state.CompraCreada;
+import org.mastereventos.state.CompraPagada;
+import org.mastereventos.state.CompraReembolsada;
+
 public class Compra {
 
     private String idCompra;
@@ -9,53 +16,81 @@ public class Compra {
     private Evento evento;
     private List<Entrada> entradas;
     private double total;
-    private EstadoCompra estado;
 
-    public Compra(String idCompra,
-                  Usuario usuario,
-                  Evento evento,
-                  List<Entrada> entradas) {
+    // STATE
+    private CompraContext estadoContext;
+
+    public Compra(
+            String idCompra,
+            Usuario usuario,
+            Evento evento,
+            List<Entrada> entradas
+    ) {
 
         this.idCompra = idCompra;
         this.usuario = usuario;
         this.evento = evento;
         this.entradas = entradas;
+
         this.total = calcularTotal();
-        this.estado = EstadoCompra.CREADA;
+
+        // ESTADO INICIAL
+        estadoContext = new CompraContext();
+
+        estadoContext.setEstado(
+                new CompraCreada()
+        );
     }
 
-    // CÁLCULO AUTOMÁTICO
+
+    // CÁLCULO TOTAL
 
     private double calcularTotal() {
 
         double suma = 0;
 
         for (Entrada entrada : entradas) {
+
             suma += entrada.getPrecioFinal();
         }
 
         return suma;
     }
 
+
     // CAMBIOS DE ESTADO
 
     public void pagarCompra() {
-        estado = EstadoCompra.PAGADA;
+
+        estadoContext.setEstado(
+                new CompraPagada()
+        );
     }
 
     public void confirmarCompra() {
-        estado = EstadoCompra.CONFIRMADA;
+
+        estadoContext.setEstado(
+                new CompraConfirmada()
+        );
     }
 
     public void cancelarCompra() {
-        estado = EstadoCompra.CANCELADA;
+
+        estadoContext.setEstado(
+                new CompraCancelada()
+        );
     }
 
     public void reembolsarCompra() {
-        estado = EstadoCompra.REEMBOLSADA;
+
+        estadoContext.setEstado(
+                new CompraReembolsada()
+        );
     }
 
+    // =========================
     // GETTERS Y SETTERS
+    // =========================
 
     public String getIdCompra() {
         return idCompra;
@@ -86,7 +121,9 @@ public class Compra {
     }
 
     public void setEntradas(List<Entrada> entradas) {
+
         this.entradas = entradas;
+
         this.total = calcularTotal();
     }
 
@@ -94,22 +131,22 @@ public class Compra {
         return total;
     }
 
-    public EstadoCompra getEstado() {
-        return estado;
-    }
+    // OBTENER ESTADO ACTUAL
 
-    public void setEstado(EstadoCompra estado) {
-        this.estado = estado;
+    public String getEstado() {
+
+        return estadoContext.getEstadoActual();
     }
 
     @Override
     public String toString() {
+
         return "Compra{" +
                 "id='" + idCompra + '\'' +
                 ", usuario=" + usuario.getNombre() +
                 ", evento=" + evento.getNombre() +
                 ", total=" + total +
-                ", estado=" + estado +
+                ", estado=" + getEstado() +
                 '}';
     }
 }

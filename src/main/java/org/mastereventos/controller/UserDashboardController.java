@@ -23,6 +23,12 @@ import org.mastereventos.strategy.*;//actualizacion admin
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.mastereventos.observer.EventoSubject;
+import org.mastereventos.observer.NotificacionUsuario;
+import org.mastereventos.facade.CompraFacade;
+import org.mastereventos.adapter.PayPalAPI;
+import org.mastereventos.adapter.PayPalAdapter;
+import org.mastereventos.adapter.PagoExterno;
 
 public class UserDashboardController {
 
@@ -70,10 +76,13 @@ public class UserDashboardController {
 
     private Usuario usuarioActual;
 
-    private final EventoRepository eventoRepository = new EventoRepository();
+    private final EventoRepository eventoRepository =
+            EventoRepository.getInstancia();
     private final ZonaRepository zonaRepository = new ZonaRepository();
-    private final CompraRepository compraRepository = new CompraRepository();
-    private final IncidenciaRepository incidenciaRepository = new IncidenciaRepository();
+    private final CompraRepository compraRepository =
+            CompraRepository.getInstancia();
+    private final IncidenciaRepository incidenciaRepository =
+            IncidenciaRepository.getInstancia();
 
     public void setUsuarioActual(Usuario usuarioActual) {
         this.usuarioActual = usuarioActual;
@@ -299,7 +308,17 @@ public class UserDashboardController {
         switch (metodoPago) {
 
             case "PayPal":
+
+                PayPalAPI api =
+                        new PayPalAPI();
+
+                PagoExterno adapter =
+                        new PayPalAdapter(api);
+
+                adapter.pagar(entradaDecorada.getCosto());
+
                 estrategia = new PagoPayPal();
+
                 break;
 
             case "PSE":
@@ -317,18 +336,35 @@ public class UserDashboardController {
                 .agregarEntrada(entrada)
                 .build();
 
-        PagoContext context = new PagoContext();
-
-        context.setEstrategia(estrategia);
+        CompraFacade facade =
+                new CompraFacade();
 
         boolean pagoExitoso =
-                context.ejecutarPago(
-                        compra.getTotal()
+                facade.realizarCompra(
+                        usuarioActual.getNombre(),
+                        entradaDecorada,
+                        estrategia
                 );
+        EventoSubject subject =
+                new EventoSubject();
+
+        NotificacionUsuario observer =
+                new NotificacionUsuario(
+                        usuarioActual.getNombre()
+                );
+
+        subject.agregarObserver(observer);
 
         if (pagoExitoso) {
 
             compra.pagarCompra();
+
+            subject.notificarObservers(
+                    "Compra realizada correctamente para el evento "
+                            + evento.getNombre()
+            );
+
+
         }
 
         compraRepository.guardarCompra(compra);

@@ -3,62 +3,91 @@ package org.mastereventos.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mastereventos.factory.ConciertoFactory;
+import org.mastereventos.factory.ConferenciaFactory;
+import org.mastereventos.factory.EventoFactory;
+import org.mastereventos.factory.TeatroFactory;
 import org.mastereventos.model.EstadoEvento;
 import org.mastereventos.model.Evento;
 
 public class EventoRepository {
 
+    private static EventoRepository instancia;
+
     private static final List<Evento> eventos =
             new ArrayList<>();
 
-    public EventoRepository() {
+    // CONSTRUCTOR PRIVADO
+
+    private EventoRepository() {
 
         if (!eventos.isEmpty()) {
             return;
         }
 
-        eventos.add(new Evento(
-                "E001",
-                "Concierto Rock Nacional",
-                "Concierto",
-                "Evento musical con bandas nacionales.",
-                "Bogotá",
-                "2026-06-15 20:00",
-                EstadoEvento.PUBLICADO
-        ));
+        EventoFactory conciertoFactory =
+                new ConciertoFactory();
 
-        eventos.add(new Evento(
-                "E002",
-                "Obra de Teatro Clásico",
-                "Teatro",
-                "Presentación teatral para público general.",
-                "Medellín",
-                "2026-07-10 19:00",
-                EstadoEvento.PUBLICADO
-        ));
+        EventoFactory teatroFactory =
+                new TeatroFactory();
 
-        eventos.add(new Evento(
-                "E003",
-                "Conferencia de Tecnología",
-                "Conferencia",
-                "Charlas sobre innovación e IA.",
-                "Cali",
-                "2026-08-05 09:00",
-                EstadoEvento.PUBLICADO
-        ));
+        EventoFactory conferenciaFactory =
+                new ConferenciaFactory();
+
+        eventos.add(
+                conciertoFactory.crearEvento(
+                        "E001",
+                        "Concierto Rock Nacional",
+                        "Evento musical con bandas nacionales.",
+                        "Bogotá",
+                        "2026-06-15 20:00",
+                        EstadoEvento.PUBLICADO
+                )
+        );
+
+        eventos.add(
+                teatroFactory.crearEvento(
+                        "E002",
+                        "Obra de Teatro Clásico",
+                        "Presentación teatral para público general.",
+                        "Medellín",
+                        "2026-07-10 19:00",
+                        EstadoEvento.PUBLICADO
+                )
+        );
+
+        eventos.add(
+                conferenciaFactory.crearEvento(
+                        "E003",
+                        "Conferencia de Tecnología",
+                        "Charlas sobre innovación e IA.",
+                        "Cali",
+                        "2026-08-05 09:00",
+                        EstadoEvento.PUBLICADO
+                )
+        );
     }
 
-    // =========================
+    // SINGLETON
+
+    public static EventoRepository getInstancia() {
+
+        if (instancia == null) {
+
+            instancia =
+                    new EventoRepository();
+        }
+
+        return instancia;
+    }
+
     // LISTAR TODOS
-    // =========================
 
     public List<Evento> listarEventos() {
         return eventos;
     }
 
-    // =========================
     // LISTAR PUBLICADOS
-    // =========================
 
     public List<Evento> listarEventosPublicados() {
 
@@ -79,9 +108,7 @@ public class EventoRepository {
         return publicados;
     }
 
-    // =========================
-    // FILTRAR
-    // =========================
+    // FILTRAR EVENTOS
 
     public List<Evento> filtrarEventos(
             String ciudad,

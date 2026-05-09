@@ -52,13 +52,13 @@ public class AdminDashboardController {
     private TextArea descripcionEventoArea;
 
     private final EventoRepository eventoRepository =
-            new EventoRepository();
+            EventoRepository.getInstancia();
 
     private final CompraRepository compraRepository =
-            new CompraRepository();
+            CompraRepository.getInstancia();
 
     private final IncidenciaRepository incidenciaRepository =
-            new IncidenciaRepository();
+            IncidenciaRepository.getInstancia();
 
     @FXML
     private void initialize() {
