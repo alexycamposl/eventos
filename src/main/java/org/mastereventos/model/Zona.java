@@ -1,7 +1,5 @@
 package org.mastereventos.model;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,25 +19,31 @@ public class Zona {
         this.asientos = new ArrayList<>();
     }
 
-    public void agregarAsiento(Asiento asiento) {
-        asientos.add(asiento);
+    public void agregarAsiento(Asiento asiento) { asientos.add(asiento); }
+    public void eliminarAsiento(String idAsiento) {
+        asientos.removeIf(a -> a.getIdAsiento().equals(idAsiento));
     }
 
-    public List<Asiento> getAsientos() {
-        return asientos;
-    }
+    public List<Asiento> getAsientos() { return asientos; }
 
-    public double getPrecioBase() {
-        return precioBase;
-    }
+    public String getIdZona() { return idZona; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public int getCapacidad() { return capacidad; }
+    public void setCapacidad(int capacidad) { this.capacidad = capacidad; }
+    public double getPrecioBase() { return precioBase; }
+    public void setPrecioBase(double precioBase) { this.precioBase = precioBase; }
 
-    public String getNombre() {
-        return nombre;
+    public int contarVendidos() {
+        int count = 0;
+        for (Asiento a : asientos) {
+            if ("Vendido".equalsIgnoreCase(a.getEstado())) count++;
+        }
+        return count;
     }
 
     @Override
     public String toString() {
-        return nombre + " - $" + precioBase;
+        return idZona + " - " + nombre + " (cap: " + capacidad + ") - $" + precioBase;
     }
-
 }

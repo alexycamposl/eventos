@@ -1,9 +1,5 @@
 package org.mastereventos.controller;
 
-import org.mastereventos.model.Rol;
-import org.mastereventos.model.Usuario;
-import org.mastereventos.service.AuthService;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,18 +7,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.mastereventos.model.Rol;
+import org.mastereventos.model.Usuario;
+import org.mastereventos.service.AuthService;
 
 public class LoginController {
 
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private PasswordField passwordField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
     @FXML
     private void handleLogin() {
-
         String correo = usernameField.getText();
         String password = passwordField.getText();
 
@@ -32,14 +27,13 @@ public class LoginController {
         if (usuario != null) {
             abrirDashboard(usuario);
         } else {
-            showAlert("Error", "Correo o contraseña incorrectos");
+            showAlert("Error", "Correo o contrasena incorrectos");
         }
     }
 
     private void abrirDashboard(Usuario usuario) {
         try {
             String vista;
-
             if (usuario.getRol() == Rol.ADMIN) {
                 vista = "/org/mastereventos/ui/AdminDashboardView.fxml";
             } else {
@@ -47,9 +41,12 @@ public class LoginController {
             }
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(vista));
-            Scene scene = new Scene(loader.load(), 900, 600);
+            Scene scene = new Scene(loader.load(), 1000, 700);
 
-            if (usuario.getRol() == Rol.USUARIO) {
+            if (usuario.getRol() == Rol.ADMIN) {
+                AdminDashboardController controller = loader.getController();
+                controller.setUsuarioActual(usuario);
+            } else {
                 UserDashboardController controller = loader.getController();
                 controller.setUsuarioActual(usuario);
             }

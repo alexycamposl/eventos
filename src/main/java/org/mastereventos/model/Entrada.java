@@ -1,7 +1,5 @@
 package org.mastereventos.model;
 
-
-
 public class Entrada {
 
     private String idEntrada;
@@ -19,15 +17,17 @@ public class Entrada {
         this.estado = estado;
     }
 
-    public double getPrecioFinal() {
-        return precioFinal;
-    }
+    public String getIdEntrada() { return idEntrada; }
+    public Zona getZona() { return zona; }
+    public Asiento getAsiento() { return asiento; }
+    public double getPrecioFinal() { return precioFinal; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    @Override
+    public String toString() {
+        String zonaStr = zona != null ? zona.getNombre() : "Sin zona";
+        String asientoStr = asiento != null ? asiento.toString() : "Sin asiento";
+        return idEntrada + " | " + zonaStr + " | " + asientoStr + " | $" + precioFinal + " | " + estado;
     }
 }

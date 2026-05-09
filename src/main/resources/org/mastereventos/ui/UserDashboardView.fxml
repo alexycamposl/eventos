@@ -8,6 +8,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -15,133 +16,103 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.mastereventos.controller.UserDashboardController"
             style="-fx-background-color: #f4f6f8;">
-
     <content>
-        <VBox alignment="CENTER" spacing="15.0"
-              prefWidth="900.0"
+        <VBox alignment="CENTER" spacing="12.0" prefWidth="960.0"
               style="-fx-background-color: #f4f6f8;">
+            <padding><Insets top="25" right="40" bottom="25" left="40"/></padding>
 
-            <padding>
-                <Insets top="30" right="40" bottom="30" left="40"/>
-            </padding>
-
-            <Label text="Panel de Usuario"
-                   style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
-
-            <Label text="Eventos disponibles"
-                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
-
-            <HBox alignment="CENTER" spacing="10.0">
-                <ComboBox fx:id="ciudadComboBox"
-                          promptText="Ciudad"
-                          prefWidth="180"/>
-
-                <ComboBox fx:id="categoriaComboBox"
-                          promptText="Categoría"
-                          prefWidth="180"/>
-
-                <Button text="Filtrar"
-                        onAction="#handleFiltrar"/>
-
-                <Button text="Limpiar"
-                        onAction="#handleLimpiarFiltros"/>
+            <!-- ENCABEZADO -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="bienvenidaLabel" text="Bienvenido"
+                       style="-fx-font-size: 26px; -fx-font-weight: bold;"/>
+                <Button text="Cerrar sesion" onAction="#handleLogout"
+                        style="-fx-background-color: #ef5350; -fx-text-fill: white;"/>
             </HBox>
 
-            <ListView fx:id="eventosListView"
-                      prefWidth="650"
-                      prefHeight="180"/>
-
-            <Label text="Detalle del evento"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <TextArea fx:id="detalleEventoArea"
-                      prefWidth="650"
-                      prefHeight="130"
-                      editable="false"
-                      wrapText="true"/>
-
-            <Label text="Selección de entrada"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <HBox alignment="CENTER" spacing="10.0">
-                <ComboBox fx:id="zonaComboBox"
-                          promptText="Zona"
-                          prefWidth="220"/>
-
-                <ComboBox fx:id="asientoComboBox"
-                          promptText="Asiento"
-                          prefWidth="220"/>
-
-                <Label fx:id="precioZonaLabel"
-                       text="Precio: $0"
-                       style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+            <!-- PERFIL -->
+            <Label text="Mi Perfil" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="10">
+                <TextField fx:id="editNombreField" promptText="Nombre" prefWidth="200"/>
+                <TextField fx:id="editCorreoField" promptText="Correo" prefWidth="200"/>
+                <TextField fx:id="editTelefonoField" promptText="Telefono" prefWidth="150"/>
+                <Button text="Guardar perfil" onAction="#handleGuardarPerfil"
+                        style="-fx-background-color: #4caf50; -fx-text-fill: white;"/>
             </HBox>
 
-            <Label text="Servicios adicionales"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <HBox alignment="CENTER" spacing="10.0">
-                <CheckBox fx:id="vipCheckBox"
-                          text="VIP"/>
-
-                <CheckBox fx:id="seguroCheckBox"
-                          text="Seguro"/>
-
-                <CheckBox fx:id="merchCheckBox"
-                          text="Merchandising"/>
+            <!-- FILTROS EVENTOS -->
+            <Label text="Eventos disponibles" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="ciudadComboBox" promptText="Ciudad" prefWidth="160"/>
+                <ComboBox fx:id="categoriaComboBox" promptText="Categoria" prefWidth="160"/>
+                <Button text="Filtrar" onAction="#handleFiltrar"/>
+                <Button text="Limpiar" onAction="#handleLimpiarFiltros"/>
             </HBox>
 
-            <Button text="Crear compra"
-                    onAction="#handleCrearCompra"/>
+            <ListView fx:id="eventosListView" prefWidth="650" prefHeight="160"/>
 
-            <Button text="Cancelar compra"
-                    onAction="#handleCancelarCompra"/>
+            <Label text="Detalle del evento" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <TextArea fx:id="detalleEventoArea" prefWidth="650" prefHeight="130"
+                      editable="false" wrapText="true"/>
 
-            <Label text="Pago"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <HBox alignment="CENTER" spacing="10.0">
-                <ComboBox fx:id="metodoPagoComboBox"
-                          promptText="Método de pago"
-                          prefWidth="220"/>
-
-                <Button text="Pagar compra"
-                        onAction="#handlePagarCompra"/>
+            <!-- SELECCIÓN ENTRADA -->
+            <Label text="Seleccion de entrada" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="zonaComboBox" promptText="Zona" prefWidth="200"/>
+                <ComboBox fx:id="asientoComboBox" promptText="Asiento" prefWidth="200"/>
+                <Label fx:id="precioZonaLabel" text="Precio: $0"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
             </HBox>
 
-            <Label text="Resumen de compra"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <TextArea fx:id="resumenCompraArea"
-                      prefWidth="650"
-                      prefHeight="180"
-                      editable="false"
-                      wrapText="true"/>
-
-            <Label text="Historial de compras"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-
-            <HBox alignment="CENTER" spacing="10.0">
-                <ComboBox fx:id="estadoHistorialComboBox"
-                          promptText="Estado"
-                          prefWidth="180"/>
-
-                <Button text="Filtrar historial"
-                        onAction="#handleFiltrarHistorial"/>
-
-                <Button text="Actualizar historial"
-                        onAction="#handleActualizarHistorial"/>
-
-                <Button text="Exportar CSV"
-                        onAction="#handleExportarCSV"/>
-
-                <Button text="Exportar PDF"
-                        onAction="#handleExportarPDF"/>
+            <!-- SERVICIOS ADICIONALES -->
+            <Label text="Servicios adicionales" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="15">
+                <CheckBox fx:id="vipCheckBox" text="VIP (+$150.000)"/>
+                <CheckBox fx:id="seguroCheckBox" text="Seguro (+$20.000)"/>
+                <CheckBox fx:id="merchCheckBox" text="Merchandising (+$30.000)"/>
+                <CheckBox fx:id="parqueaderoCheckBox" text="Parqueadero (+$30.000)"/>
+                <CheckBox fx:id="accesoPreferencialCheckBox" text="Acceso Preferencial (+$50.000)"/>
             </HBox>
 
-            <ListView fx:id="historialComprasListView"
-                      prefWidth="650"
-                      prefHeight="180"/>
+            <!-- BOTONES COMPRA -->
+            <HBox alignment="CENTER" spacing="10">
+                <Button text="Crear compra" onAction="#handleCrearCompra"
+                        style="-fx-background-color: #2196f3; -fx-text-fill: white;"/>
+                <Button text="Modificar compra" onAction="#handleModificarCompra"
+                        style="-fx-background-color: #ff9800; -fx-text-fill: white;"/>
+                <Button text="Cancelar compra" onAction="#handleCancelarCompra"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            </HBox>
+
+            <!-- PAGO -->
+            <Label text="Pago" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="10">
+                <ComboBox fx:id="metodoPagoComboBox" promptText="Metodo de pago" prefWidth="200"/>
+                <Button text="Pagar compra" onAction="#handlePagarCompra"
+                        style="-fx-background-color: #4caf50; -fx-text-fill: white;"/>
+            </HBox>
+
+            <!-- RESUMEN -->
+            <Label text="Resumen de compra" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <TextArea fx:id="resumenCompraArea" prefWidth="650" prefHeight="160"
+                      editable="false" wrapText="true"/>
+
+            <!-- HISTORIAL -->
+            <Label text="Historial de compras" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER" spacing="8">
+                <ComboBox fx:id="estadoHistorialComboBox" promptText="Estado" prefWidth="140"/>
+                <ComboBox fx:id="eventoHistorialComboBox" promptText="Evento" prefWidth="180"/>
+                <TextField fx:id="fechaHistorialField" promptText="Fecha (YYYY-MM-DD)" prefWidth="160"/>
+                <Button text="Filtrar" onAction="#handleFiltrarHistorial"/>
+                <Button text="Actualizar" onAction="#handleActualizarHistorial"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Button text="Cargar para modificar" onAction="#handleCargarCompraParaModificar"
+                        style="-fx-background-color: #9c27b0; -fx-text-fill: white;"/>
+                <Button text="Exportar CSV" onAction="#handleExportarCSV"/>
+                <Button text="Exportar PDF" onAction="#handleExportarPDF"/>
+            </HBox>
+
+            <ListView fx:id="historialComprasListView" prefWidth="820" prefHeight="180"/>
 
         </VBox>
     </content>

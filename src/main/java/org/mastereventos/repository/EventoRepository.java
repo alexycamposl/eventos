@@ -1,83 +1,91 @@
 package org.mastereventos.repository;
 
+import org.mastereventos.model.Evento;
+import org.mastereventos.singleton.DataStore;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mastereventos.model.Evento;
-
 public class EventoRepository {
 
-    private final List<Evento> eventos;
+    private final List<Evento> eventos = DataStore.getInstancia().getEventos();
 
-    public EventoRepository() {
-        eventos = new ArrayList<>();
-
-        eventos.add(new Evento(
-                "E001",
-                "Concierto Rock Nacional",
-                "Concierto",
-                "Evento musical con bandas nacionales.",
-                "Bogotá",
-                "2026-06-15 20:00",
-                "Publicado"
-        ));
-
-        eventos.add(new Evento(
-                "E002",
-                "Obra de Teatro Clásico",
-                "Teatro",
-                "Presentación teatral para público general.",
-                "Medellín",
-                "2026-07-10 19:00",
-                "Publicado"
-        ));
-
-        eventos.add(new Evento(
-                "E003",
-                "Conferencia de Tecnología",
-                "Conferencia",
-                "Charlas sobre innovación, software e inteligencia artificial.",
-                "Cali",
-                "2026-08-05 09:00",
-                "Publicado"
-        ));
+    public List<Evento> getEventos() {
+        return eventos;
     }
 
     public List<Evento> listarEventosPublicados() {
         List<Evento> publicados = new ArrayList<>();
-
-        for (Evento evento : eventos) {
-            if ("Publicado".equalsIgnoreCase(evento.getEstado())) {
-                publicados.add(evento);
-            }
+        for (Evento e : eventos) {
+            if ("Publicado".equalsIgnoreCase(e.getEstado())) publicados.add(e);
         }
-
         return publicados;
     }
 
     public List<Evento> filtrarEventos(String ciudad, String categoria) {
-        List<Evento> filtrados = new ArrayList<>();
-
-        for (Evento evento : listarEventosPublicados()) {
-            boolean coincideCiudad = ciudad == null
-                    || ciudad.isBlank()
+        List<Evento> resultado = new ArrayList<>();
+        for (Evento e : listarEventosPublicados()) {
+            boolean coincideCiudad = ciudad == null || ciudad.isBlank()
                     || "Todas".equalsIgnoreCase(ciudad)
-                    || evento.getCiudad().equalsIgnoreCase(ciudad);
-
-            boolean coincideCategoria = categoria == null
-                    || categoria.isBlank()
+                    || e.getCiudad().equalsIgnoreCase(ciudad);
+            boolean coincideCategoria = categoria == null || categoria.isBlank()
                     || "Todas".equalsIgnoreCase(categoria)
-                    || evento.getCategoria().equalsIgnoreCase(categoria);
-
-            if (coincideCiudad && coincideCategoria) {
-                filtrados.add(evento);
-            }
+                    || e.getCategoria().equalsIgnoreCase(categoria);
+            if (coincideCiudad && coincideCategoria) resultado.add(e);
         }
-
-        return filtrados;
+        return resultado;
     }
 
-    public List<Evento> getEventos() {
-        return eventos;
+    public List<Evento> filtrarEventosAdmin(String ciudad, String categoria, String estado) {
+        List<Evento> resultado = new ArrayList<>();
+        for (Evento e : eventos) {
+            boolean coincideCiudad = ciudad == null || ciudad.isBlank()
+                    || "Todas".equalsIgnoreCase(ciudad)
+                    || e.getCiudad().equalsIgnoreCase(ciudad);
+            boolean coincideCategoria = categoria == null || categoria.isBlank()
+                    || "Todas".equalsIgnoreCase(categoria)
+                    || e.getCategoria().equalsIgnoreCase(categoria);
+            boolean coincideEstado = estado == null || estado.isBlank()
+                    || "Todos".equalsIgnoreCase(estado)
+                    || e.getEstado().equalsIgnoreCase(estado);
+            if (coincideCiudad && coincideCategoria && coincideEstado) resultado.add(e);
+        }
+        return resultado;
+    }
+
+    public Evento buscarPorId(String idEvento) {
+        for (Evento e : eventos) {
+            if (e.getIdEvento().equals(idEvento)) return e;
+        }
+        return null;
+    }
+
+    public void guardar(Evento evento) {
+        for (int i = 0; i < eventos.size(); i++) {
+            if (eventos.get(i).getIdEvento().equals(evento.getIdEvento())) {
+                eventos.set(i, evento);
+                return;
+            }
+        }
+        eventos.add(evento);
+    }
+
+    public void eliminar(String idEvento) {
+        eventos.removeIf(e -> e.getIdEvento().equals(idEvento));
+    }
+
+    public void cambiarEstado(String idEvento, String nuevoEstado) {
+        Evento e = buscarPorId(idEvento);
+        if (e != null) e.setEstado(nuevoEstado);
+    }
+
+    public String generarNuevoId() {
+        int max = eventos.stream()
+                .mapToInt(e -> {
+                    try { return Integer.parseInt(e.getIdEvento().replace("E", "")); }
+                    catch (NumberFormatException ex) { return 0; }
+                })
+                .max().orElse(0);
+        return "E" + String.format("%03d", max + 1);
     }
 }
