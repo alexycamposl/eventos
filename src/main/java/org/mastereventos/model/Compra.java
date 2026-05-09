@@ -42,4 +42,12 @@ public class Compra {
     public List<Entrada> getEntradas() {
         return entradas;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public Evento getEvento() {
+        return evento;
+    }
 }

@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" spacing="15.0"
@@ -17,7 +19,20 @@
     <Label text="Panel de Administrador"
            style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
 
-    <Label text="Aquí el administrador podrá gestionar eventos, usuarios, recintos, compras y reportes."
-           style="-fx-font-size: 16px;"/>
+    <Label text="Gestion de eventos"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <ListView fx:id="eventosAdminListView"
+              prefWidth="650"
+              prefHeight="280"/>
+
+    <Label text="Detalle del evento"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <TextArea fx:id="detalleEventoAdminArea"
+              prefWidth="650"
+              prefHeight="150"
+              editable="false"
+              wrapText="true"/>
 
 </VBox>

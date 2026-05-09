@@ -94,6 +94,21 @@
             <Button text="Crear compra"
                     onAction="#handleCrearCompra"/>
 
+            <Button text="Cancelar compra"
+                    onAction="#handleCancelarCompra"/>
+
+            <Label text="Pago"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <ComboBox fx:id="metodoPagoComboBox"
+                          promptText="Método de pago"
+                          prefWidth="220"/>
+
+                <Button text="Pagar compra"
+                        onAction="#handlePagarCompra"/>
+            </HBox>
+
             <Label text="Resumen de compra"
                    style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
@@ -102,6 +117,31 @@
                       prefHeight="180"
                       editable="false"
                       wrapText="true"/>
+
+            <Label text="Historial de compras"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <HBox alignment="CENTER" spacing="10.0">
+                <ComboBox fx:id="estadoHistorialComboBox"
+                          promptText="Estado"
+                          prefWidth="180"/>
+
+                <Button text="Filtrar historial"
+                        onAction="#handleFiltrarHistorial"/>
+
+                <Button text="Actualizar historial"
+                        onAction="#handleActualizarHistorial"/>
+
+                <Button text="Exportar CSV"
+                        onAction="#handleExportarCSV"/>
+
+                <Button text="Exportar PDF"
+                        onAction="#handleExportarPDF"/>
+            </HBox>
+
+            <ListView fx:id="historialComprasListView"
+                      prefWidth="650"
+                      prefHeight="180"/>
 
         </VBox>
     </content>
