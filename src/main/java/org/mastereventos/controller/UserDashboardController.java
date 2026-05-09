@@ -6,15 +6,12 @@ import org.mastereventos.decorator.EntradaComponent;
 import org.mastereventos.decorator.MerchDecorator;
 import org.mastereventos.decorator.SeguroDecorator;
 import org.mastereventos.decorator.VIPDecorator;
-import org.mastereventos.model.Asiento;
-import org.mastereventos.model.Compra;
-import org.mastereventos.model.Entrada;
-import org.mastereventos.model.Evento;
-import org.mastereventos.model.Usuario;
-import org.mastereventos.model.Zona;
+import org.mastereventos.model.*;
 import org.mastereventos.repository.EventoRepository;
 import org.mastereventos.repository.ZonaRepository;
-
+import org.mastereventos.repository.CompraRepository;
+import org.mastereventos.repository.IncidenciaRepository;
+import javafx.scene.control.ListCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -22,6 +19,16 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import org.mastereventos.strategy.*;//actualizacion admin
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import org.mastereventos.observer.EventoSubject;
+import org.mastereventos.observer.NotificacionUsuario;
+import org.mastereventos.facade.CompraFacade;
+import org.mastereventos.adapter.PayPalAPI;
+import org.mastereventos.adapter.PayPalAdapter;
+import org.mastereventos.adapter.PagoExterno;
 
 public class UserDashboardController {
 
@@ -56,12 +63,26 @@ public class UserDashboardController {
     private CheckBox merchCheckBox;
 
     @FXML
+    private ComboBox<String> metodoPagoComboBox;
+
+    @FXML
     private TextArea resumenCompraArea;
+
+    @FXML
+    private ListView<Compra> comprasListView;
+
+
+
 
     private Usuario usuarioActual;
 
-    private final EventoRepository eventoRepository = new EventoRepository();
+    private final EventoRepository eventoRepository =
+            EventoRepository.getInstancia();
     private final ZonaRepository zonaRepository = new ZonaRepository();
+    private final CompraRepository compraRepository =
+            CompraRepository.getInstancia();
+    private final IncidenciaRepository incidenciaRepository =
+            IncidenciaRepository.getInstancia();
 
     public void setUsuarioActual(Usuario usuarioActual) {
         this.usuarioActual = usuarioActual;
@@ -71,6 +92,13 @@ public class UserDashboardController {
     private void initialize() {
         cargarFiltros();
         cargarEventos();
+        configurarListaCompras();
+
+        metodoPagoComboBox.getItems().addAll(
+                "Tarjeta",
+                "PayPal",
+                "PSE"
+        );
 
         eventosListView.getSelectionModel()
                 .selectedItemProperty()
@@ -91,6 +119,33 @@ public class UserDashboardController {
 
         merchCheckBox.selectedProperty()
                 .addListener((observable, anterior, seleccionado) -> actualizarTotalEstimado());
+    }
+
+    private void configurarListaCompras() {
+
+        comprasListView.setCellFactory(param -> new ListCell<>() {
+
+            @Override
+            protected void updateItem(Compra compra, boolean empty) {
+
+                super.updateItem(compra, empty);
+
+                if (empty || compra == null) {
+                    setText(null);
+                } else {
+
+                    setText(
+                            compra.getIdCompra()
+                                    + " | "
+                                    + compra.getEvento().getNombre()
+                                    + " | $"
+                                    + compra.getTotal()
+                                    + " | "
+                                    + compra.getEstado()
+                    );
+                }
+            }
+        });
     }
 
     private void cargarFiltros() {
@@ -120,6 +175,62 @@ public class UserDashboardController {
         String categoria = categoriaComboBox.getValue();
 
         eventosListView.getItems().addAll(eventoRepository.filtrarEventos(ciudad, categoria));
+    }
+    @FXML
+    private void handleActualizarHistorial() {
+        actualizarHistorialCompras();
+    }
+
+    @FXML
+    private void handleCancelarCompra() {
+
+        Compra compra =
+                comprasListView.getSelectionModel().getSelectedItem();
+
+        if (compra == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona una compra."
+            );
+
+            return;
+        }
+
+        compra.cancelarCompra();
+
+        actualizarHistorialCompras();
+
+        showAlert(
+                "Compra cancelada",
+                "La compra fue cancelada correctamente."
+        );
+    }
+
+    @FXML
+    private void handleReembolsarCompra() {
+
+        Compra compra =
+                comprasListView.getSelectionModel().getSelectedItem();
+
+        if (compra == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona una compra."
+            );
+
+            return;
+        }
+
+        compra.reembolsarCompra();
+
+        actualizarHistorialCompras();
+
+        showAlert(
+                "Compra reembolsada",
+                "El reembolso fue procesado."
+        );
     }
 
     @FXML
@@ -151,15 +262,72 @@ public class UserDashboardController {
             return;
         }
 
+        if (!asiento.estaDisponible()) {
+
+            Incidencia incidencia = new Incidencia(
+                    "INC-" + System.currentTimeMillis(),
+                    "Asiento ocupado",
+                    "Intento de compra de asiento no disponible",
+                    asiento.getIdAsiento()
+            );
+
+            incidenciaRepository.registrarIncidencia(incidencia);
+
+            showAlert(
+                    "Asiento no disponible",
+                    "El asiento seleccionado ya no está disponible."
+            );
+
+            return;
+        }
+
         EntradaComponent entradaDecorada = crearEntradaDecorada(evento, zona);
 
         Entrada entrada = new Entrada(
                 "ENT-" + System.currentTimeMillis(),
                 zona,
                 asiento,
-                entradaDecorada.getCosto(),
-                "Activa"
+                entradaDecorada.getCosto()
         );
+
+        String metodoPago =
+                metodoPagoComboBox.getValue();
+
+        if (metodoPago == null) {
+
+            showAlert(
+                    "Error",
+                    "Selecciona método de pago."
+            );
+
+            return;
+        }
+
+        PagoStrategy estrategia;
+
+        switch (metodoPago) {
+
+            case "PayPal":
+
+                PayPalAPI api =
+                        new PayPalAPI();
+
+                PagoExterno adapter =
+                        new PayPalAdapter(api);
+
+                adapter.pagar(entradaDecorada.getCosto());
+
+                estrategia = new PagoPayPal();
+
+                break;
+
+            case "PSE":
+                estrategia = new PagoPSE();
+                break;
+
+            default:
+                estrategia = new PagoTarjeta();
+        }
 
         Compra compra = new CompraBuilder()
                 .setIdCompra("COM-" + System.currentTimeMillis())
@@ -168,7 +336,41 @@ public class UserDashboardController {
                 .agregarEntrada(entrada)
                 .build();
 
-        asiento.setEstado("Reservado");
+        CompraFacade facade =
+                new CompraFacade();
+
+        boolean pagoExitoso =
+                facade.realizarCompra(
+                        usuarioActual.getNombre(),
+                        entradaDecorada,
+                        estrategia
+                );
+        EventoSubject subject =
+                new EventoSubject();
+
+        NotificacionUsuario observer =
+                new NotificacionUsuario(
+                        usuarioActual.getNombre()
+                );
+
+        subject.agregarObserver(observer);
+
+        if (pagoExitoso) {
+
+            compra.pagarCompra();
+
+            subject.notificarObservers(
+                    "Compra realizada correctamente para el evento "
+                            + evento.getNombre()
+            );
+
+
+        }
+
+        compraRepository.guardarCompra(compra);
+        actualizarHistorialCompras();
+
+        asiento.setEstado(EstadoAsiento.RESERVADO);
         cargarAsientosZona(zona);
 
         String resumen = "Compra creada correctamente\n"
@@ -236,6 +438,21 @@ public class UserDashboardController {
         detalleEventoArea.setText(detalle);
     }
 
+    private void actualizarHistorialCompras() {
+
+        comprasListView.getItems().clear();
+
+        if (usuarioActual == null) {
+            return;
+        }
+
+        comprasListView.getItems().addAll(
+                compraRepository.listarComprasUsuario(
+                        usuarioActual.getIdUsuario()
+                )
+        );
+    }
+
     private void cargarZonasEvento(Evento evento) {
         zonaComboBox.getItems().clear();
         asientoComboBox.getItems().clear();
@@ -274,5 +491,41 @@ public class UserDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void handleCerrarSesion() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/org/mastereventos/ui/LoginView.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load(), 600, 400);
+
+            Stage stage =
+                    (Stage) eventosListView
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle("MasterEventos - Login");
+
+            stage.show();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            showAlert(
+                    "Error",
+                    "No se pudo cerrar sesión."
+            );
+        }
     }
 }

@@ -11,6 +11,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+
+
 <ScrollPane fitToWidth="true"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.mastereventos.controller.UserDashboardController"
@@ -27,6 +29,9 @@
 
             <Label text="Panel de Usuario"
                    style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+            <Button text="Cerrar sesión"
+                    onAction="#handleCerrarSesion"/>
 
             <Label text="Eventos disponibles"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
@@ -59,6 +64,25 @@
                       prefHeight="130"
                       editable="false"
                       wrapText="true"/>
+            <Label text="Historial de compras"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <ListView fx:id="comprasListView"
+                      prefWidth="650"
+                      prefHeight="220"/>
+
+            <HBox alignment="CENTER" spacing="10">
+
+                <Button text="Actualizar historial"
+                        onAction="#handleActualizarHistorial"/>
+
+                <Button text="Cancelar compra"
+                        onAction="#handleCancelarCompra"/>
+
+                <Button text="Reembolsar compra"
+                        onAction="#handleReembolsarCompra"/>
+
+            </HBox>
 
             <Label text="Selección de entrada"
                    style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
@@ -91,6 +115,13 @@
                           text="Merchandising"/>
             </HBox>
 
+            <Label text="Método de pago"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <ComboBox fx:id="metodoPagoComboBox"
+                      promptText="Selecciona método de pago"
+                      prefWidth="250"/>
+
             <Button text="Crear compra"
                     onAction="#handleCrearCompra"/>
 
@@ -102,6 +133,13 @@
                       prefHeight="180"
                       editable="false"
                       wrapText="true"/>
+
+            <Button text="Cerrar Sesión"
+                    onAction="#handleCerrarSesion"
+                    style="-fx-background-color: #ef4444;
+               -fx-text-fill: white;
+               -fx-font-weight: bold;"/>
+
 
         </VBox>
     </content>
