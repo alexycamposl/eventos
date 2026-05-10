@@ -14,7 +14,7 @@ public class MainApp extends Application {
         );
 
         Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
-        stage.setTitle("MasterEventos");
+        stage.setTitle("-MasterEventos-");
         stage.setScene(scene);
         stage.show();
     }
