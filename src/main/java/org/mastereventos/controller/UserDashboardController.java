@@ -67,6 +67,18 @@ public class UserDashboardController {
     private final CSVReportGenerator csvReport = new CSVReportGenerator();
     private final PDFReportGenerator pdfReport = new PDFReportGenerator();
 
+
+    public void setUsuarioLogueado(Usuario usuario) {
+        this.usuarioActual = usuario;
+
+        bienvenidaLabel.setText("Bienvenido, " + usuario.getNombre());
+        editNombreField.setText(usuario.getNombre());
+        editCorreoField.setText(usuario.getCorreo());
+        editTelefonoField.setText(usuario.getTelefono());
+
+        editCorreoField.setEditable(false);
+    }
+
     public void setUsuarioActual(Usuario usuario) {
         this.usuarioActual = usuario;
         bienvenidaLabel.setText("Bienvenido, " + usuario.getNombre());

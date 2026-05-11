@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="15.0"
+<VBox alignment="CENTER" spacing="20.0"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.mastereventos.controller.LoginController"
       style="-fx-background-color: linear-gradient(to bottom, #1e3c72, #2a5298);"
@@ -17,19 +17,28 @@
     <Label text="Bienvenido a MasterEventos"
            style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
 
-    <TextField fx:id="usernameField"
-               promptText="Usuario"
-               maxWidth="300"
-               style="-fx-font-size: 16px;"/>
+    <TabPane tabClosingPolicy="UNAVAILABLE" maxWidth="350"
+             style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 8;">
 
-    <PasswordField fx:id="passwordField"
-                   promptText="Contraseña"
-                   maxWidth="300"
-                   style="-fx-font-size: 16px;"/>
+        <Tab text="Iniciar Sesión" style="-fx-font-size: 14px; -fx-font-weight: bold;">
+            <VBox alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+                <TextField fx:id="loginCorreoField" promptText="Correo electrónico" style="-fx-font-size: 16px;"/>
+                <PasswordField fx:id="loginPasswordField" promptText="Contraseña" style="-fx-font-size: 16px;"/>
+                <Button text="Iniciar Sesión" onAction="#handleLogin" prefWidth="300"
+                        style="-fx-font-size: 16px; -fx-background-color: #00c6ff; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </VBox>
+        </Tab>
 
-    <Button text="Iniciar Sesión"
-            onAction="#handleLogin"
-            maxWidth="300"
-            style="-fx-font-size: 16px; -fx-background-color: #00c6ff; -fx-text-fill: white;"/>
+        <Tab text="Crear Cuenta" style="-fx-font-size: 14px; -fx-font-weight: bold;">
+            <VBox alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+                <TextField fx:id="regNombreField" promptText="Nombre completo" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="regCorreoField" promptText="Correo electrónico" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="regTelefonoField" promptText="Teléfono" style="-fx-font-size: 14px;"/>
+                <PasswordField fx:id="regPasswordField" promptText="Contraseña" style="-fx-font-size: 14px;"/>
+                <Button text="Registrarse" onAction="#handleRegistro" prefWidth="300"
+                        style="-fx-font-size: 16px; -fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </VBox>
+        </Tab>
+    </TabPane>
 
 </VBox>
