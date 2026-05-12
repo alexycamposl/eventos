@@ -54,15 +54,12 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
                 Parent root = loader.load();
 
-                // --- NUEVO CÓDIGO: PASAR LOS DATOS AL CONTROLADOR ---
                 if (usuarioAutenticado.getRol() == Rol.USUARIO) {
-                    // Obtenemos el controlador de la ventana que acabamos de cargar
+                   
                     UserDashboardController userController = loader.getController();
-                    // Le enviamos el usuario
+                
                     userController.setUsuarioLogueado(usuarioAutenticado);
                 }
-                // Si quieres hacer lo mismo para el Admin, podrías añadir un 'else if' aquí luego.
-                // ----------------------------------------------------
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root, 1000, 700);
@@ -119,12 +116,9 @@ public class LoginController {
         alert.showAndWait();
     }
 
-    // Asegúrate de tener tu servicio instanciado
+    
     private AuthService authService = new AuthService();
 
-    // ... (Mantén tu método handleLogin actual, solo recuerda usar loginCorreoField.getText()) ...
-
-    // 2. Nuevo método para manejar el registro
     @FXML
     public void handleRegistro(ActionEvent event) {
         String nombre = regNombreField.getText();
@@ -132,32 +126,29 @@ public class LoginController {
         String telefono = regTelefonoField.getText();
         String password = regPasswordField.getText();
 
-        // Validación básica de campos vacíos
         if (nombre.isBlank() || correo.isBlank() || telefono.isBlank() || password.isBlank()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios para registrarse.", Alert.AlertType.WARNING);
             return;
         }
 
-        // Llamada a nuestro nuevo método en el servicio
         Usuario nuevoUsuario = authService.registrarUsuario(nombre, correo, telefono, password);
 
         if (nuevoUsuario != null) {
             mostrarAlerta("Éxito", "Cuenta creada exitosamente. ¡Ahora puedes iniciar sesión!", Alert.AlertType.INFORMATION);
 
-            // Limpiar los campos después del registro exitoso
+   
             regNombreField.clear();
             regCorreoField.clear();
             regTelefonoField.clear();
             regPasswordField.clear();
 
-            // Opcional: pre-llenar el correo en la pestaña de login para mayor comodidad
+          
             loginCorreoField.setText(correo);
         } else {
             mostrarAlerta("Error", "El correo " + correo + " ya está registrado en el sistema.", Alert.AlertType.ERROR);
         }
     }
 
-    // Método de utilidad para alertas (si no lo tenías ya)
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
