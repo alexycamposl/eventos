@@ -13,8 +13,8 @@ public class MainApp extends Application {
                 MainApp.class.getResource("/org/mastereventos/ui/LoginView.fxml")
         );
 
-        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
-        stage.setTitle("MasterEventos");
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        stage.setTitle("-MasterEventos-");
         stage.setScene(scene);
         stage.show();
     }

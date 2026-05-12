@@ -1,7 +1,5 @@
 package org.mastereventos.model;
 
-
-
 public class Pago {
 
     private String idPago;

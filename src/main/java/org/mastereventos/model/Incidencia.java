@@ -1,7 +1,5 @@
 package org.mastereventos.model;
 
-
-
 public class Incidencia {
 
     private String idIncidencia;
@@ -20,11 +18,14 @@ public class Incidencia {
         this.entidadAfectada = entidadAfectada;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
+    public String getIdIncidencia() { return idIncidencia; }
+    public String getTipo() { return tipo; }
+    public String getDescripcion() { return descripcion; }
+    public String getFecha() { return fecha; }
+    public String getEntidadAfectada() { return entidadAfectada; }
 
-    public String getDescripcion() {
-        return descripcion;
+    @Override
+    public String toString() {
+        return idIncidencia + " | " + tipo + " | " + entidadAfectada + " | " + fecha;
     }
 }
